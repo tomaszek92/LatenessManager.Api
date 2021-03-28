@@ -13,6 +13,10 @@ namespace LatenessManager.Infrastructure.Persistence
     {
         private readonly IDomainEventService _domainEventService;
 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
             IDomainEventService domainEventService)
@@ -30,7 +34,7 @@ namespace LatenessManager.Infrastructure.Persistence
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-        
+
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var result = await base.SaveChangesAsync(cancellationToken);

@@ -6,10 +6,14 @@ namespace LatenessManager.Domain.Entities.PlayerAggregate
     public class Penalty : BaseEntity
     {
         public const int Unit = 100;
-        
+
         public DateTime Date { get; }
         public int Count { get; }
         public int PlayerId { get; }
+
+        private Penalty()
+        {
+        }
 
         public Penalty(DateTime date, int count)
         {
@@ -17,7 +21,7 @@ namespace LatenessManager.Domain.Entities.PlayerAggregate
             {
                 throw new ArgumentException("Date cannot be default", nameof(date));
             }
-            
+
             Date = date;
             Count = count;
         }
