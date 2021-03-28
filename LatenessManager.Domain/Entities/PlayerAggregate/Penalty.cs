@@ -7,12 +7,13 @@ namespace LatenessManager.Domain.Entities.PlayerAggregate
     {
         public const int Unit = 100;
 
-        public DateTime Date { get; }
-        public int Count { get; }
-        public int PlayerId { get; }
+        public DateTime Date { get; private set; }
+        public int Count { get; private set; }
+        public int PlayerId { get; private set; }
 
         private Penalty()
         {
+            // EF Core required
         }
 
         public Penalty(DateTime date, int count)

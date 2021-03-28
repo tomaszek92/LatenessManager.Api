@@ -8,12 +8,13 @@ namespace LatenessManager.Domain.Entities.PlayerAggregate
 {
     public class Player : BaseEntity, IAggregateRoot
     {
-        public PlayerName Name { get; }
+        public PlayerName Name { get; private set; }
         private readonly List<Penalty> _penalties = new();
         public IReadOnlyCollection<Penalty> Penalties => _penalties.AsReadOnly();
 
         private Player()
         {
+            // EF Core required
         }
         
         public void AddPenalty(DateTime date)

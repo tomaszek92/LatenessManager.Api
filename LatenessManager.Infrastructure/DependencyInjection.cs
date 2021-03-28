@@ -19,9 +19,7 @@ namespace LatenessManager.Infrastructure
             else
             {
                 services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
-                    options.UseNpgsql(
-                        configuration.GetConnectionString("LatenessManagerDb"),
-                        builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                    options.UseNpgsql(configuration.GetConnectionString("LatenessManagerDb")));
             }
             
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();

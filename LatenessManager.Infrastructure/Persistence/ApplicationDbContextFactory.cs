@@ -16,9 +16,7 @@ namespace LatenessManager.Infrastructure.Persistence
 
             var dbContextBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            var connectionString = configuration.GetConnectionString("LatenessManagerDb");
-
-            dbContextBuilder.UseNpgsql(connectionString);
+            dbContextBuilder.UseNpgsql(configuration.GetConnectionString("LatenessManagerDb"));
 
             return new ApplicationDbContext(dbContextBuilder.Options);
         }
