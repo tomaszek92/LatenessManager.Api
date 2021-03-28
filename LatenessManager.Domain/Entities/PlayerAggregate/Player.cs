@@ -12,11 +12,6 @@ namespace LatenessManager.Domain.Entities.PlayerAggregate
         private readonly List<Penalty> _penalties = new();
         public IReadOnlyCollection<Penalty> Penalties => _penalties.AsReadOnly();
 
-        private Player()
-        {
-            // EF Core required
-        }
-        
         public void AddPenalty(DateTime date)
         {
             if (_penalties.Any(p => p.Date == date && p.Count == Penalty.Unit))

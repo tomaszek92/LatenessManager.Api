@@ -6,9 +6,13 @@ namespace LatenessManager.Infrastructure.Persistence.Configurations
 {
     public class PlayerConfiguration : IEntityTypeConfiguration<Player>
     {
-        public void Configure(EntityTypeBuilder<Player> builder)
+        public void Configure(EntityTypeBuilder<Player> playerBuilder)
         {
-            builder.OwnsOne(x => x.Name);
+            playerBuilder.OwnsOne(x => x.Name, playerNameBuilder =>
+            {
+                playerNameBuilder.Property(x => x.FirstName).IsRequired();
+                playerNameBuilder.Property(x => x.LastName).IsRequired();
+            });
         }
     }
 }

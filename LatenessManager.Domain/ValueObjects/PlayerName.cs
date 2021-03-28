@@ -8,11 +8,6 @@ namespace LatenessManager.Domain.ValueObjects
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
 
-        private PlayerName()
-        {
-            // EF Core required
-        }
-
         public PlayerName(string firstName, string lastName)
         {
             FirstName = firstName;
