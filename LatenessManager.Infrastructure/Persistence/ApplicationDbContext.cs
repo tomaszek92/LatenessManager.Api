@@ -1,9 +1,10 @@
 ﻿using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Abstractions;
 using LatenessManager.Domain.Common;
-using LatenessManager.Domain.Entities;
+using LatenessManager.Domain.Entities.PlayerAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace LatenessManager.Infrastructure.Persistence
@@ -21,7 +22,15 @@ namespace LatenessManager.Infrastructure.Persistence
         }
 
         public DbSet<Player> Players { get; set; }
+        public DbSet<Penalty> Penalties { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+        
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var result = await base.SaveChangesAsync(cancellationToken);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LatenessManager.Domain.Entities;
+using LatenessManager.Domain.Entities.PlayerAggregate;
 
 namespace LatenessManager.Application.Players.Dtos
 {

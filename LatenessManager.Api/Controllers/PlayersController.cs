@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using LatenessManager.Application.Players.Commands.AddPenalty;
+using LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand;
 using LatenessManager.Application.Players.Dtos;
 using LatenessManager.Application.Players.Queries.GetPlayers;
 using MediatR;
@@ -28,6 +30,28 @@ namespace LatenessManager.Api.Controllers
         public async Task<ActionResult<PlayerDto>> GetById([FromRoute] int id, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpPost("{id}/penalty")]
+        public async Task<ActionResult> AddPenalty(
+            [FromRoute] int id,
+            [FromBody] AddPenaltyCommand command,
+            CancellationToken cancellationToken)
+        {
+            await Sender.Send(command, cancellationToken);
+
+            return new CreatedAtRouteResult(nameof(GetById), new { id });
+        }
+        
+        [HttpDelete("{id}/penalty")]
+        public async Task<ActionResult> CarryOutPenalty(
+            [FromRoute] int id,
+            [FromBody] CarryOutPenaltyCommand command,
+            CancellationToken cancellationToken)
+        {
+            await Sender.Send(command, cancellationToken);
+
+            return new NoContentResult();
         }
     }
 }
