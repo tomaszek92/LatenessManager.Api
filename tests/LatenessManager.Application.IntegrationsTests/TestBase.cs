@@ -14,31 +14,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Xunit;
 
 namespace LatenessManager.Application.IntegrationsTests
 {
-    public class TestBase : IDisposable
+    public class TestBase : IAsyncLifetime
     {
         protected readonly IFixture Fixture = TestFixture.Get();
+        
         private static IConfigurationRoot _configuration;
         private static IServiceScopeFactory _scopeFactory;
 
-        protected TestBase()
+        public Task InitializeAsync()
         {
-            RunBeforeAnyTests();
-        }
-
-        private static void RunBeforeAnyTests()
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .AddEnvironmentVariables();
-
-            _configuration = builder.Build();
+            _configuration = GetConfigurationBuilder().Build();
 
             var startup = new Startup(_configuration);
-
             var services = new ServiceCollection();
 
             services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
@@ -52,7 +43,30 @@ namespace LatenessManager.Application.IntegrationsTests
             _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
             EnsureDatabase();
+
+            return Task.CompletedTask;
         }
+
+        public async Task DisposeAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetService<IApplicationDbContext>();
+
+            if (context is null)
+            {
+                throw new Exception($"{nameof(IApplicationDbContext)} is null");
+            }
+            
+            context.Players.RemoveRange(context.Players);
+            await context.SaveChangesAsync(CancellationToken.None);
+        }
+
+        private static IConfigurationBuilder GetConfigurationBuilder() =>
+            new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .AddEnvironmentVariables();
 
         private static void EnsureDatabase()
         {
@@ -95,11 +109,6 @@ namespace LatenessManager.Application.IntegrationsTests
             }
 
             return await mediator.Send(request);
-        }
-
-        public void Dispose()
-        {
-            
         }
     }
 }

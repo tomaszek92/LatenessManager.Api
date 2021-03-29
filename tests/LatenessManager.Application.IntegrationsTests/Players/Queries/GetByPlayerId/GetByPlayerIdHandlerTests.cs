@@ -9,6 +9,7 @@ using Xunit;
 
 namespace LatenessManager.Application.IntegrationsTests.Players.Queries.GetByPlayerId
 {
+    [Collection("Integration tests")]
     public class GetByPlayerIdHandlerTests : TestBase
     {
         [Fact]
