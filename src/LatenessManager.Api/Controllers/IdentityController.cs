@@ -49,22 +49,22 @@ namespace LatenessManager.Api.Controllers
 
         [HttpPost("tokens/{token}/refresh")]
         [Authorize]
-        public async Task<ActionResult<JsonWebToken>> RefreshToken(
+        public async Task<ActionResult<JsonWebToken>> RefreshAccessToken(
             string token,
             CancellationToken cancellationToken)
         {
-            var jsonWebToken = await _identityService.RefreshTokenAsync(token, cancellationToken);
+            var jsonWebToken = await _identityService.RefreshAccessTokenAsync(token, cancellationToken);
 
             return jsonWebToken;
         }
  
         [HttpPost("tokens/{token}/revoke")]
         [Authorize]
-        public async Task<ActionResult> RevokeToken(
+        public async Task<ActionResult> RevokeRefreshToken(
             string token,
             CancellationToken cancellationToken)
         {
-            await _identityService.RevokeTokenAsync(token, cancellationToken);
+            await _identityService.RevokeRefreshTokenAsync(token, cancellationToken);
  
             return new NoContentResult();
         }

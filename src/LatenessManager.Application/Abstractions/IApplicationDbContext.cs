@@ -12,7 +12,7 @@ namespace LatenessManager.Application.Abstractions
         DbSet<Player> Players { get; set; }
         DbSet<Penalty> Penalties { get; set; }
         DbSet<User> Users { get; set; }
-        DbSet<UserToken> UserTokens { get; set; }
+        DbSet<RefreshToken> RefreshTokens { get; set; }
 
         DatabaseFacade Database { get; }
 
