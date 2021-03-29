@@ -8,6 +8,7 @@ namespace LatenessManager.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Penalty> builder)
         {
+            builder.Property(x => x.Date).HasColumnType("date");
         }
     }
 }

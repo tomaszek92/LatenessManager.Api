@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Players.Commands.AddPenalty;
 using LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand;
+using LatenessManager.Application.Players.Commands.CreatePlayer;
 using LatenessManager.Application.Players.Queries.GetPlayerById;
 using LatenessManager.Application.Players.Queries.GetPlayers;
 using MediatR;
@@ -27,7 +28,9 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlayerDetailsDto>> GetById([FromRoute] int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<PlayerDetailsDto>> GetById(
+            [FromRoute] int id,
+            CancellationToken cancellationToken)
         {
             var query = new GetPlayerByIdQuery { Id = id };
             var result = await Sender.Send(query, cancellationToken);
@@ -35,12 +38,18 @@ namespace LatenessManager.Api.Controllers
             return result;
         }
 
-        // [HttpPost]
-        // public async Task<ActionResult> CreatePlayer(
-        //     CancellationToken cancellationToken)
-        // {
-        //     throw new NotImplementedException();
-        // }
+        [HttpPost]
+        public async Task<ActionResult<PlayerDetailsDto>> CreatePlayer(
+            [FromBody] CreatePlayerCommand command,
+            CancellationToken cancellationToken)
+        {
+            var id =await Sender.Send(command, cancellationToken);
+            
+            var query = new GetPlayerByIdQuery { Id = id };
+            var result = await Sender.Send(query, cancellationToken);
+            
+            return new CreatedAtRouteResult(nameof(GetById), result);
+        }
         
         [HttpPost("{id}/penalty")]
         public async Task<ActionResult> AddPenalty(
@@ -55,7 +64,7 @@ namespace LatenessManager.Api.Controllers
             
             await Sender.Send(command, cancellationToken);
 
-            return new CreatedAtRouteResult(nameof(GetById), new { id });
+            return new OkResult();
         }
         
         [HttpDelete("{id}/penalty")]
