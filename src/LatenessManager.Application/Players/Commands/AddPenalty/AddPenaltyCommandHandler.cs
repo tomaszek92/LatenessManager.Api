@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LatenessManager.Application.Abstractions;
 using LatenessManager.Domain.Entities.PlayerAggregate;
+using LatenessManager.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +20,8 @@ namespace LatenessManager.Application.Players.Commands.AddPenalty
         public async Task<Unit> Handle(AddPenaltyCommand request, CancellationToken cancellationToken)
         {
             var player = await GetPlayerAsync(request.Id, cancellationToken);
-
             player.AddPenalty(request.Date.Date);
+            player.Events.Add(new PlayerPenaltyAddedEvent(request.Id));
 
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
 

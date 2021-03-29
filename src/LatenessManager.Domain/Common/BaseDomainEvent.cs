@@ -4,6 +4,6 @@ namespace LatenessManager.Domain.Common
 {
     public abstract class BaseDomainEvent
     {
-        public DateTime DateOccurred { get; } = DateTime.UtcNow;
+        public DateTime DateTimeOccurredUtc { get; } = DateTime.UtcNow;
     }
 }
