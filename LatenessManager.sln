@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Api", "LatenessManager.Api\LatenessManager.Api.csproj", "{9756081E-4653-4407-9C11-F23027DE42C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Api", "src\LatenessManager.Api\LatenessManager.Api.csproj", "{9756081E-4653-4407-9C11-F23027DE42C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5CF0C4BB-E621-4130-9ED3-556DF01556F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Domain", "LatenessManager.Domain\LatenessManager.Domain.csproj", "{1CA1B51F-ECE0-4D13-A9A2-3AF674E37E99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Domain", "src\LatenessManager.Domain\LatenessManager.Domain.csproj", "{1CA1B51F-ECE0-4D13-A9A2-3AF674E37E99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Infrastructure", "LatenessManager.Infrastructure\LatenessManager.Infrastructure.csproj", "{35B1E992-7A16-44AB-A6AE-70CEC0F76C44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Infrastructure", "src\LatenessManager.Infrastructure\LatenessManager.Infrastructure.csproj", "{35B1E992-7A16-44AB-A6AE-70CEC0F76C44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Application", "LatenessManager.Application\LatenessManager.Application.csproj", "{21D125C8-6376-42E3-94A3-CE266D9CB999}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Application", "src\LatenessManager.Application\LatenessManager.Application.csproj", "{21D125C8-6376-42E3-94A3-CE266D9CB999}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EDE54537-3535-412C-8879-3E3296CA1F28}"
 EndProject
