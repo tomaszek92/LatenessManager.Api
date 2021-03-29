@@ -29,7 +29,7 @@ namespace LatenessManager.Infrastructure.Persistence
         public DbSet<Player> Players { get; set; }
         public DbSet<Penalty> Penalties { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
