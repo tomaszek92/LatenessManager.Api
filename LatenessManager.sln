@@ -10,6 +10,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Application", "LatenessManager.Application\LatenessManager.Application.csproj", "{21D125C8-6376-42E3-94A3-CE266D9CB999}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EDE54537-3535-412C-8879-3E3296CA1F28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Domain.UnitTests", "tests\LatenessManager.Domain.UnitTests\LatenessManager.Domain.UnitTests.csproj", "{ECABD169-8E28-45B6-BB3A-E5EEC7FAFE46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Application.UnitTests", "tests\LatenessManager.Application.UnitTests\LatenessManager.Application.UnitTests.csproj", "{04963CCF-FA7F-4036-811B-5C5FE1FBF5B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatenessManager.Application.IntegrationsTests", "tests\LatenessManager.Application.IntegrationsTests\LatenessManager.Application.IntegrationsTests.csproj", "{5EE57769-6BF2-4BC5-9042-DDB8E8F7AEFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,11 +40,26 @@ Global
 		{21D125C8-6376-42E3-94A3-CE266D9CB999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21D125C8-6376-42E3-94A3-CE266D9CB999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21D125C8-6376-42E3-94A3-CE266D9CB999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECABD169-8E28-45B6-BB3A-E5EEC7FAFE46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECABD169-8E28-45B6-BB3A-E5EEC7FAFE46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECABD169-8E28-45B6-BB3A-E5EEC7FAFE46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECABD169-8E28-45B6-BB3A-E5EEC7FAFE46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04963CCF-FA7F-4036-811B-5C5FE1FBF5B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04963CCF-FA7F-4036-811B-5C5FE1FBF5B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04963CCF-FA7F-4036-811B-5C5FE1FBF5B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04963CCF-FA7F-4036-811B-5C5FE1FBF5B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE57769-6BF2-4BC5-9042-DDB8E8F7AEFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE57769-6BF2-4BC5-9042-DDB8E8F7AEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE57769-6BF2-4BC5-9042-DDB8E8F7AEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE57769-6BF2-4BC5-9042-DDB8E8F7AEFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9756081E-4653-4407-9C11-F23027DE42C2} = {5CF0C4BB-E621-4130-9ED3-556DF01556F4}
 		{1CA1B51F-ECE0-4D13-A9A2-3AF674E37E99} = {5CF0C4BB-E621-4130-9ED3-556DF01556F4}
 		{35B1E992-7A16-44AB-A6AE-70CEC0F76C44} = {5CF0C4BB-E621-4130-9ED3-556DF01556F4}
 		{21D125C8-6376-42E3-94A3-CE266D9CB999} = {5CF0C4BB-E621-4130-9ED3-556DF01556F4}
+		{ECABD169-8E28-45B6-BB3A-E5EEC7FAFE46} = {EDE54537-3535-412C-8879-3E3296CA1F28}
+		{04963CCF-FA7F-4036-811B-5C5FE1FBF5B1} = {EDE54537-3535-412C-8879-3E3296CA1F28}
+		{5EE57769-6BF2-4BC5-9042-DDB8E8F7AEFD} = {EDE54537-3535-412C-8879-3E3296CA1F28}
 	EndGlobalSection
 EndGlobal

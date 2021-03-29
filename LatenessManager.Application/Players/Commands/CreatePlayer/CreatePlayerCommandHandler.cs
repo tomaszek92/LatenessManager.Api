@@ -21,7 +21,11 @@ namespace LatenessManager.Application.Players.Commands.CreatePlayer
         public async Task<int> Handle(CreatePlayerCommand request, CancellationToken cancellationToken)
         {
             var player = new Player(new PlayerName(request.FirstName, request.LastName));
-            player.SetInitialPenalty(_dateTimeProvider.UtcNow.ToLocalTime().Date, request.InitialPenaltyCount);
+
+            if (request.InitialPenaltyCount >= Penalty.Unit)
+            {
+                player.SetInitialPenalty(_dateTimeProvider.UtcNow.ToLocalTime().Date, request.InitialPenaltyCount);
+            }
 
             await _applicationDbContext.Players.AddAsync(player, cancellationToken);
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
