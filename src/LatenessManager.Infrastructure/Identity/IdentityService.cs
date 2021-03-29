@@ -39,26 +39,31 @@ namespace LatenessManager.Infrastructure.Identity
             {
                 throw new Exception($"Email '{email}' is already in use.");
             }
+
+            var user = new User
+            {
+                Email = email
+            };
+
+            var hashPassword = _passwordHasher.HashPassword(user, password);
+            user.Password = hashPassword;
             
-            await AddUserToDatabaseAsync(email, password, cancellationToken);
+            await AddUserToDatabaseAsync(user, cancellationToken);
         }
 
         public async Task<JsonWebToken> LoginAsync(string email, string password, CancellationToken cancellationToken)
         {
-            var user = await GetUserAsync(email, cancellationToken);
-            
-            if (user == null)
+            var user = await GetUserAsync(email, cancellationToken) ??
+                       throw new Exception("Invalid credentials.");
+
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+            if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
                 throw new Exception("Invalid credentials.");
             }
-            
+
             var jwt = _jwtHandler.Create(user.Id);
-            
-            var refreshToken = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString())
-                .Replace("+", string.Empty)
-                .Replace("=", string.Empty)
-                .Replace("/", string.Empty);
-            
+            var refreshToken = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString());
             jwt.RefreshToken = refreshToken;
             
             await AddRefreshTokenToDatabaseAsync(user.Id, refreshToken, cancellationToken);
@@ -68,11 +73,8 @@ namespace LatenessManager.Infrastructure.Identity
 
         public async Task<JsonWebToken> RefreshAccessTokenAsync(string token, CancellationToken cancellationToken)
         {
-            var refreshToken = await GetRefreshTokenAsync(token, cancellationToken);
-            if (refreshToken == null)
-            {
-                throw new Exception("Refresh token was not found.");
-            }
+            var refreshToken = await GetRefreshTokenAsync(token, cancellationToken) ??
+                               throw new Exception("Refresh token was not found.");
 
             if (refreshToken.Revoked)
             {
@@ -87,11 +89,8 @@ namespace LatenessManager.Infrastructure.Identity
 
         public async Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken)
         {
-            var refreshToken = await GetRefreshTokenAsync(token, cancellationToken);
-            if (refreshToken == null)
-            {
-                throw new Exception("Refresh token was not found.");
-            }
+            var refreshToken = await GetRefreshTokenAsync(token, cancellationToken) ??
+                               throw new Exception("Refresh token was not found.");
 
             if (refreshToken.Revoked)
             {
@@ -99,6 +98,8 @@ namespace LatenessManager.Infrastructure.Identity
             }
 
             refreshToken.Revoked = true;
+
+            await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
 
         private async Task<User> GetUserAsync(string email, CancellationToken cancellationToken)
@@ -116,16 +117,9 @@ namespace LatenessManager.Infrastructure.Identity
                 .FirstOrDefaultAsync(refreshToken => refreshToken.Token == token, cancellationToken);
 
         private async Task AddUserToDatabaseAsync(
-            string email,
-            string password,
+            User user,
             CancellationToken cancellationToken)
         {
-            var user = new User
-            {
-                Email = email.ToLower(),
-                Password = password
-            };
-
             await _applicationDbContext.Users.AddAsync(user, cancellationToken);
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }

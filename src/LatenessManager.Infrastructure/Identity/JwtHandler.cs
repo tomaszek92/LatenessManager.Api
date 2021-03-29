@@ -26,7 +26,7 @@ namespace LatenessManager.Infrastructure.Identity
         {
             var nowUtc = DateTime.UtcNow;
             var expires = nowUtc.AddMinutes(_jwtTokenConfiguration.ExpiryMinutes);
-            var centuryBegin = new DateTime(1970,1,1).ToUniversalTime();
+            var centuryBegin = new DateTime(1970,1,1, 0, 0, 0, DateTimeKind.Utc);
             var exp = (long)new TimeSpan(expires.Ticks - centuryBegin.Ticks).TotalSeconds;
             var iat = (long)new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds;
             var payload = new JwtPayload
