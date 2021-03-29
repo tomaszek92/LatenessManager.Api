@@ -8,10 +8,12 @@ using LatenessManager.Application.Players.Commands.CreatePlayer;
 using LatenessManager.Application.Players.Queries.GetPlayerById;
 using LatenessManager.Application.Players.Queries.GetPlayers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LatenessManager.Api.Controllers
 {
+    [Authorize]
     public class PlayersController : BaseController
     {
         public PlayersController(ISender sender) : base(sender)
@@ -19,6 +21,7 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<PlayerDto>>> Get(CancellationToken cancellationToken)
         {
             var query = new GetPlayersQuery();
@@ -28,6 +31,7 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<PlayerDetailsDto>> GetById(
             [FromRoute] int id,
             CancellationToken cancellationToken)

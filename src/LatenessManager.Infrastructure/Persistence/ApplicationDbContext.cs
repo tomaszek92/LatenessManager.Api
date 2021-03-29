@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Abstractions;
+using LatenessManager.Application.Common.Models;
 using LatenessManager.Domain.Common;
 using LatenessManager.Domain.Entities.PlayerAggregate;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,8 @@ namespace LatenessManager.Infrastructure.Persistence
 
         public DbSet<Player> Players { get; set; }
         public DbSet<Penalty> Penalties { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
