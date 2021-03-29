@@ -24,11 +24,17 @@ namespace LatenessManager.Application.IntegrationsTests
     public class TestBase : IAsyncLifetime
     {
         protected readonly IFixture Fixture = TestFixture.Get();
+        protected readonly DateTime UtcNow;
 
         private static IConfigurationRoot _configuration;
         private static IServiceScopeFactory _scopeFactory;
-        protected static DateTime UtcNow;
 
+        protected TestBase()
+        {
+            var dateTime = Fixture.Create<DateTime>();
+            UtcNow = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
+        
         public Task InitializeAsync()
         {
             _configuration = GetConfigurationBuilder().Build();
@@ -76,9 +82,6 @@ namespace LatenessManager.Application.IntegrationsTests
 
         private void ReplaceDateTimeProvider(IServiceCollection services)
         {
-            var dateTime = Fixture.Create<DateTime>();
-            UtcNow = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
-
             var currentUserServiceDescriptor = services.FirstOrDefault(serviceDescriptor =>
                 serviceDescriptor.ServiceType == typeof(IDateTimeProvider));
 

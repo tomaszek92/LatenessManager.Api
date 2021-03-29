@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\LatenessManager.Application\LatenessManager.Application.csproj" />
       <ProjectReference Include="..\LatenessManager.Tests.Common\LatenessManager.Tests.Common.csproj" />
     </ItemGroup>
 
