@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using LatenessManager.Application.Abstractions;
-using LatenessManager.Application.Players.Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

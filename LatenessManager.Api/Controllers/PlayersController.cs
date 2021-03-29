@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Players.Commands.AddPenalty;
 using LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand;
-using LatenessManager.Application.Players.Dtos;
+using LatenessManager.Application.Players.Queries.GetPlayerById;
 using LatenessManager.Application.Players.Queries.GetPlayers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,17 +27,32 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlayerDto>> GetById([FromRoute] int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<PlayerDetailsDto>> GetById([FromRoute] int id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var query = new GetPlayerByIdQuery { Id = id };
+            var result = await Sender.Send(query, cancellationToken);
+
+            return result;
         }
 
+        // [HttpPost]
+        // public async Task<ActionResult> CreatePlayer(
+        //     CancellationToken cancellationToken)
+        // {
+        //     throw new NotImplementedException();
+        // }
+        
         [HttpPost("{id}/penalty")]
         public async Task<ActionResult> AddPenalty(
             [FromRoute] int id,
             [FromBody] AddPenaltyCommand command,
             CancellationToken cancellationToken)
         {
+            if (id != command.Id)
+            {
+                throw new ArgumentException("Inconsistent id", nameof(id));
+            }
+            
             await Sender.Send(command, cancellationToken);
 
             return new CreatedAtRouteResult(nameof(GetById), new { id });
@@ -49,6 +64,11 @@ namespace LatenessManager.Api.Controllers
             [FromBody] CarryOutPenaltyCommand command,
             CancellationToken cancellationToken)
         {
+            if (id != command.Id)
+            {
+                throw new ArgumentException("Inconsistent id", nameof(id));
+            }
+            
             await Sender.Send(command, cancellationToken);
 
             return new NoContentResult();

@@ -1,3 +1,4 @@
+using LatenessManager.Api.Middleware;
 using LatenessManager.Application;
 using LatenessManager.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -50,6 +51,8 @@ namespace LatenessManager.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            app.HandleExceptions();
         }
     }
 }
