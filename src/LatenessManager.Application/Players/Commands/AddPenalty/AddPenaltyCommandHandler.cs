@@ -31,6 +31,6 @@ namespace LatenessManager.Application.Players.Commands.AddPenalty
         private async Task<Player> GetPlayerAsync(int playerId, CancellationToken cancellationToken) =>
             await _applicationDbContext
                 .Players
-                .FirstAsync(p => p.Id == playerId, cancellationToken);
+                .FirstAsync(player => player.Id == playerId, cancellationToken);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -21,7 +22,7 @@ namespace LatenessManager.Application.IntegrationsTests
     public class TestBase : IAsyncLifetime
     {
         protected readonly IFixture Fixture = TestFixture.Get();
-        
+
         private static IConfigurationRoot _configuration;
         private static IServiceScopeFactory _scopeFactory;
 
@@ -57,7 +58,7 @@ namespace LatenessManager.Application.IntegrationsTests
             {
                 throw new Exception($"{nameof(IApplicationDbContext)} is null");
             }
-            
+
             context.Players.RemoveRange(context.Players);
             await context.SaveChangesAsync(CancellationToken.None);
         }
@@ -82,6 +83,39 @@ namespace LatenessManager.Application.IntegrationsTests
         {
             using var scope = _scopeFactory.CreateScope();
 
+            var applicationDbContext = GetApplicationDbContext(scope);
+
+            foreach (var entity in entities)
+            {
+                await applicationDbContext.AddAsync(entity);
+            }
+
+            await applicationDbContext.SaveChangesAsync(CancellationToken.None);
+        }
+
+        protected static async Task<TEntity> FindAsync<TEntity>(
+            int id,
+            params Expression<Func<TEntity, object>>[] paths)
+            where TEntity : BaseEntity, IAggregateRoot
+        {
+            using var scope = _scopeFactory.CreateScope();
+            
+            var applicationDbContext = GetApplicationDbContext(scope);
+
+            var dbSet = applicationDbContext.Set<TEntity>().AsQueryable();
+
+            foreach (var path in paths)
+            {
+                dbSet = dbSet.Include(path);
+            }
+
+            var entity = await dbSet.FirstAsync(e => e.Id == id);
+
+            return entity;
+        }
+
+        private static ApplicationDbContext GetApplicationDbContext(IServiceScope scope)
+        {
             var context = scope.ServiceProvider.GetService<IApplicationDbContext>();
 
             if (context is null)
@@ -89,12 +123,9 @@ namespace LatenessManager.Application.IntegrationsTests
                 throw new Exception($"{nameof(IApplicationDbContext)} is null");
             }
 
-            foreach (var entity in entities)
-            {
-                await ((ApplicationDbContext) context).AddAsync(entity);
-            }
-
-            await context.SaveChangesAsync(CancellationToken.None);
+            var applicationDbContext = (ApplicationDbContext) context;
+            
+            return applicationDbContext;
         }
 
         protected static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)

@@ -46,8 +46,8 @@ namespace LatenessManager.Api.Middleware
             var errors = exception.Errors.Select(error => new
             {
                 PropertyName = error.Key,
-                ErrorCodes = error.Value.Select(a => a.ErrorCode),
-                ErrorMessages = error.Value.Select(a => a.ErrorMessage)
+                ErrorCodes = error.Value.Select(a => a.Code),
+                ErrorMessages = error.Value.Select(a => a.Message)
             });
 
             var json = JsonSerializer.Serialize(errors, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
