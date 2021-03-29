@@ -10,7 +10,6 @@ using Xunit;
 
 namespace LatenessManager.Application.IntegrationsTests.Players.Commands.AddPenalty
 {
-    [Collection("Integration tests")]
     public class AddPenaltyCommandHandlerTests : TestBase
     {
         [Fact]

@@ -11,7 +11,6 @@ using Xunit;
 
 namespace LatenessManager.Application.IntegrationsTests.Players.Commands.CarryOutPenalty
 {
-    [Collection("Integration tests")]
     public class CarryOutPenaltyCommandHandlerTests : TestBase
     {
         [Fact]

@@ -10,7 +10,6 @@ using Xunit;
 
 namespace LatenessManager.Application.IntegrationsTests.Players.Commands.CreatePlayer
 {
-    [Collection("Integration tests")]
     public class CreatePlayerCommandHandlerTests : TestBase
     {
         [Fact]

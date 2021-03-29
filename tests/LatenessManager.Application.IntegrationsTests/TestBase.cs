@@ -20,6 +20,7 @@ using Xunit;
 
 namespace LatenessManager.Application.IntegrationsTests
 {
+    [Collection("Integration tests")]
     public class TestBase : IAsyncLifetime
     {
         protected readonly IFixture Fixture = TestFixture.Get();
