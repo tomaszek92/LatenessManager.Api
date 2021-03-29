@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand
+namespace LatenessManager.Application.Players.Commands.CarryOutPenalty
 {
     public class CarryOutPenaltyCommand : IRequest
     {

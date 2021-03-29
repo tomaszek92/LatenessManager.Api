@@ -6,7 +6,7 @@ using LatenessManager.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand
+namespace LatenessManager.Application.Players.Commands.CarryOutPenalty
 {
     public class CarryOutPenaltyCommandHandler : IRequestHandler<CarryOutPenaltyCommand>
     {

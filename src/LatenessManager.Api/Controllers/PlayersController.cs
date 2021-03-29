@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Players.Commands.AddPenalty;
-using LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand;
+using LatenessManager.Application.Players.Commands.CarryOutPenalty;
 using LatenessManager.Application.Players.Commands.CreatePlayer;
 using LatenessManager.Application.Players.Queries.GetPlayerById;
 using LatenessManager.Application.Players.Queries.GetPlayers;

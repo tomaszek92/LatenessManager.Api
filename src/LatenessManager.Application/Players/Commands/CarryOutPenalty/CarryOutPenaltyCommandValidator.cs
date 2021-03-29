@@ -5,7 +5,7 @@ using LatenessManager.Application.Abstractions;
 using LatenessManager.Application.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace LatenessManager.Application.Players.Commands.CarryOutPenaltyCommand
+namespace LatenessManager.Application.Players.Commands.CarryOutPenalty
 {
     public class CarryOutPenaltyCommandValidator : AbstractValidator<CarryOutPenaltyCommand>
     {
