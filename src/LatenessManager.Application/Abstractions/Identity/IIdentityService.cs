@@ -8,7 +8,7 @@ namespace LatenessManager.Application.Abstractions.Identity
     {
         Task RegisterAsync(string email, string password, CancellationToken cancellationToken);
         Task<JsonWebToken> LoginAsync(string email, string password, CancellationToken cancellationToken);
-        Task<JsonWebToken> RefreshAccessTokenAsync(string token, CancellationToken cancellationToken);
-        Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken);
+        Task<JsonWebToken> RefreshTokenAsync(string token, CancellationToken cancellationToken);
+        Task RevokeTokenAsync(string token, CancellationToken cancellationToken);
     }
 }

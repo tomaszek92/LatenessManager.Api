@@ -53,22 +53,19 @@ namespace LatenessManager.Infrastructure.Identity
             }
             
             var jwt = _jwtHandler.Create(user.Id);
-            
-            var refreshToken = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString())
-                .Replace("+", string.Empty)
-                .Replace("=", string.Empty)
-                .Replace("/", string.Empty);
+
+            var refreshToken = _passwordHasher.HashPassword(user, password);
             
             jwt.RefreshToken = refreshToken;
             
-            await AddRefreshTokenToDatabaseAsync(user.Id, refreshToken, cancellationToken);
+            await AddUserTokenToDatabaseAsync(user.Id, refreshToken, cancellationToken);
  
             return jwt;
         }
 
-        public async Task<JsonWebToken> RefreshAccessTokenAsync(string token, CancellationToken cancellationToken)
+        public async Task<JsonWebToken> RefreshTokenAsync(string token, CancellationToken cancellationToken)
         {
-            var refreshToken = await GetRefreshTokenAsync(token, cancellationToken);
+            var refreshToken = await GetUserTokenAsync(token, cancellationToken);
             if (refreshToken == null)
             {
                 throw new Exception("Refresh token was not found.");
@@ -85,20 +82,20 @@ namespace LatenessManager.Infrastructure.Identity
             return jwt;
         }
 
-        public async Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken)
+        public async Task RevokeTokenAsync(string token, CancellationToken cancellationToken)
         {
-            var refreshToken = await GetRefreshTokenAsync(token, cancellationToken);
-            if (refreshToken == null)
+            var userToken = await GetUserTokenAsync(token, cancellationToken);
+            if (userToken == null)
             {
-                throw new Exception("Refresh token was not found.");
+                throw new Exception("Token was not found.");
             }
 
-            if (refreshToken.Revoked)
+            if (userToken.Revoked)
             {
-                throw new Exception("Refresh token was already revoked.");
+                throw new Exception("Token was already revoked.");
             }
 
-            refreshToken.Revoked = true;
+            userToken.Revoked = true;
         }
 
         private async Task<User> GetUserAsync(string email, CancellationToken cancellationToken)
@@ -110,9 +107,9 @@ namespace LatenessManager.Infrastructure.Identity
                 .FirstOrDefaultAsync(user => user.Email == emailLower, cancellationToken);
         }
 
-        private async Task<RefreshToken> GetRefreshTokenAsync(string token, CancellationToken cancellationToken) =>
+        private async Task<UserToken> GetUserTokenAsync(string token, CancellationToken cancellationToken) =>
             await _applicationDbContext
-                .RefreshTokens
+                .UserTokens
                 .FirstOrDefaultAsync(refreshToken => refreshToken.Token == token, cancellationToken);
 
         private async Task AddUserToDatabaseAsync(
@@ -130,17 +127,17 @@ namespace LatenessManager.Infrastructure.Identity
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
         
-        private async Task AddRefreshTokenToDatabaseAsync(
+        private async Task AddUserTokenToDatabaseAsync(
             int userId, 
             string token,
             CancellationToken cancellationToken)
         {
-            var refreshToken = new RefreshToken
+            var userToken = new UserToken
             {
                 UserId = userId,
                 Token = token
             };
-            await _applicationDbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+            await _applicationDbContext.UserTokens.AddAsync(userToken, cancellationToken);
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
     }

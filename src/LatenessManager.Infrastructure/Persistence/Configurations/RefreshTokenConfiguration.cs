@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LatenessManager.Infrastructure.Persistence.Configurations
 {
-    public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
+    public class RefreshTokenConfiguration : IEntityTypeConfiguration<UserToken>
     {
-        public void Configure(EntityTypeBuilder<RefreshToken> builder)
+        public void Configure(EntityTypeBuilder<UserToken> builder)
         {
             builder.HasKey(x => x.Token);
         }

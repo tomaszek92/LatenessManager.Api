@@ -1,6 +1,6 @@
 ﻿namespace LatenessManager.Application.Common.Models
 {
-    public class RefreshToken
+    public class UserToken
     {
         public int UserId { get; set; }
         public User User { get; set; }
