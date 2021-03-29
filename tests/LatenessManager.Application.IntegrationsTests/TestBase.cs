@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace LatenessManager.Application.IntegrationsTests
 
         private static IConfigurationRoot _configuration;
         private static IServiceScopeFactory _scopeFactory;
+        protected static DateTime UtcNow;
 
         public Task InitializeAsync()
         {
@@ -40,6 +42,8 @@ namespace LatenessManager.Application.IntegrationsTests
             services.AddLogging();
 
             startup.ConfigureServices(services);
+
+            ReplaceDateTimeProvider(services);
 
             _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
@@ -68,6 +72,21 @@ namespace LatenessManager.Application.IntegrationsTests
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .AddEnvironmentVariables();
+
+        private void ReplaceDateTimeProvider(IServiceCollection services)
+        {
+            var dateTime = Fixture.Create<DateTime>();
+            UtcNow = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+
+            var currentUserServiceDescriptor = services.FirstOrDefault(serviceDescriptor =>
+                serviceDescriptor.ServiceType == typeof(IDateTimeProvider));
+
+            services.Remove(currentUserServiceDescriptor);
+
+            // Register testing version
+            services.AddSingleton(_ =>
+                Mock.Of<IDateTimeProvider>(dateTimeProvider => dateTimeProvider.UtcNow == UtcNow));
+        }
 
         private static void EnsureDatabase()
         {
@@ -99,7 +118,7 @@ namespace LatenessManager.Application.IntegrationsTests
             where TEntity : BaseEntity, IAggregateRoot
         {
             using var scope = _scopeFactory.CreateScope();
-            
+
             var applicationDbContext = GetApplicationDbContext(scope);
 
             var dbSet = applicationDbContext.Set<TEntity>().AsQueryable();
@@ -124,7 +143,7 @@ namespace LatenessManager.Application.IntegrationsTests
             }
 
             var applicationDbContext = (ApplicationDbContext) context;
-            
+
             return applicationDbContext;
         }
 

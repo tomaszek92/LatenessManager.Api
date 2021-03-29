@@ -63,7 +63,7 @@ namespace LatenessManager.Application.IntegrationsTests.Players.Commands.CarryOu
                 .Which
                 .Errors
                 .Should()
-                .ContainKey(nameof(AddPenaltyCommand.Id))
+                .ContainKey(nameof(CarryOutPenaltyCommand.Id))
                 .WhichValue
                 .Should()
                 .ContainSingle(x => x.Code == ErrorCode.Player.NotExist);
