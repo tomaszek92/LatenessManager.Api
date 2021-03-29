@@ -24,10 +24,11 @@ namespace LatenessManager.Api
         {
             services.AddApplication();
             services.AddInfrastructure(Configuration);
-            
+
             services.AddHttpContextAccessor();
-            
+
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "LatenessManager.Api", Version = "v1"});
@@ -36,13 +37,11 @@ namespace LatenessManager.Api
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {   
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LatenessManager.Api v1"));
-            }
+        {
+            app.HandleExceptions();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LatenessManager.Api v1"));
 
             app.UseHttpsRedirection();
 
@@ -51,8 +50,6 @@ namespace LatenessManager.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            app.HandleExceptions();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using ValidationException = LatenessManager.Application.Common.Exceptions.ValidationException;
 
 namespace LatenessManager.Application.Common.PipelineBehaviours
 {
