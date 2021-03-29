@@ -23,6 +23,7 @@ namespace LatenessManager.Application.Players.Queries.GetPlayers
         public async Task<List<PlayerDto>> Handle(GetPlayersQuery request, CancellationToken cancellationToken) =>
             await _applicationDbContext
                 .Players
+                .AsNoTracking()
                 .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
     }

@@ -22,6 +22,7 @@ namespace LatenessManager.Application.Players.Queries.GetPlayerById
         public async Task<PlayerDetailsDto> Handle(GetPlayerByIdQuery request, CancellationToken cancellationToken) =>
             await _applicationDbContext
                 .Players
+                .AsNoTracking()
                 .ProjectTo<PlayerDetailsDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(player => player.Id == request.Id, cancellationToken);
     }
