@@ -32,7 +32,7 @@ namespace LatenessManager.Api.Controllers
             [FromRoute] int id,
             CancellationToken cancellationToken)
         {
-            var query = new GetPlayerByIdQuery { Id = id };
+            var query = new GetPlayerByIdQuery(id);
             var result = await Sender.Send(query, cancellationToken);
 
             return result;
@@ -45,7 +45,7 @@ namespace LatenessManager.Api.Controllers
         {
             var id =await Sender.Send(command, cancellationToken);
             
-            var query = new GetPlayerByIdQuery { Id = id };
+            var query = new GetPlayerByIdQuery(id);
             var result = await Sender.Send(query, cancellationToken);
             
             return new CreatedAtRouteResult(nameof(GetById), result);

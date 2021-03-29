@@ -11,19 +11,11 @@ namespace LatenessManager.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("LatenessManagerDb"));
-            }
-            else
-            {
-                services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
-                    options.UseNpgsql(
-                        configuration.GetConnectionString("LatenessManagerDb"),
-                        builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
-            }
-            
+            services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
+                options.UseNpgsql(
+                    configuration.GetConnectionString("LatenessManagerDb"),
+                    builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IDomainEventService, DomainEventService>();
 
