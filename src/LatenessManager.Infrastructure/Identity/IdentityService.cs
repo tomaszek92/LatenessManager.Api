@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Abstractions;
-using LatenessManager.Application.Abstractions.Identity;
 using LatenessManager.Application.Common.Models;
+using LatenessManager.Application.Identity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,19 +28,6 @@ namespace LatenessManager.Infrastructure.Identity
 
         public async Task RegisterAsync(string email, string password, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                throw new Exception($"Username can not be empty.");
-            }
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new Exception($"Password can not be empty.");
-            }
-            if (await GetUserAsync(email, cancellationToken) != null)
-            {
-                throw new Exception($"Email '{email}' is already in use.");
-            }
-
             var user = new User
             {
                 Email = email

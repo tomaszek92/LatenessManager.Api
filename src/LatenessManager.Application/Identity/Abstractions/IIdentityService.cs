@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using LatenessManager.Application.Common.Models;
 
-namespace LatenessManager.Application.Abstractions.Identity
+namespace LatenessManager.Application.Identity.Abstractions
 {
     public interface IIdentityService
     {

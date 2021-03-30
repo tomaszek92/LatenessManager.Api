@@ -1,22 +1,25 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LatenessManager.Api.Models.Identity;
-using LatenessManager.Application.Abstractions.Identity;
 using LatenessManager.Application.Common.Models;
+using LatenessManager.Application.Identity.Abstractions;
+using LatenessManager.Application.Identity.Commands.Login;
+using LatenessManager.Application.Identity.Commands.Register;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LatenessManager.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class IdentityController
+    public class IdentityController : BaseController
     {
         private readonly IIdentityService _identityService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IdentityController(IIdentityService identityService, IHttpContextAccessor httpContextAccessor)
+        public IdentityController(
+            ISender sender,
+            IIdentityService identityService, 
+            IHttpContextAccessor httpContextAccessor) : base(sender)
         {
             _identityService = identityService;
             _httpContextAccessor = httpContextAccessor;
@@ -29,20 +32,20 @@ namespace LatenessManager.Api.Controllers
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(
-            [FromBody] RegisterRequest request,
+            [FromBody] RegisterCommand command,
             CancellationToken cancellationToken)
         {
-            await _identityService.RegisterAsync(request.Email, request.Password, cancellationToken);
+            await Sender.Send(command, cancellationToken);
         
             return new NoContentResult();
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<JsonWebToken>> Login(
-            [FromBody] LoginRequest request,
+            [FromBody] LoginCommand command,
             CancellationToken cancellationToken)
         {
-            var jsonWebToken = await _identityService.LoginAsync(request.Email, request.Password, cancellationToken);
+            var jsonWebToken = await Sender.Send(command, cancellationToken);
 
             return jsonWebToken;
         }

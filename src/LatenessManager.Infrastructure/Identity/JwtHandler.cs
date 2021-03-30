@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using LatenessManager.Application.Abstractions.Identity;
 using LatenessManager.Application.Common.Models;
+using LatenessManager.Application.Identity.Abstractions;
 using LatenessManager.Infrastructure.Configurations;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,11 +24,10 @@ namespace LatenessManager.Infrastructure.Identity
 
         public JsonWebToken Create(int userId, string[] roles)
         {
-            var nowUtc = DateTime.UtcNow;
+            var nowUtc = DateTimeOffset.UtcNow;
             var expires = nowUtc.AddMinutes(_jwtTokenConfiguration.ExpiryMinutes);
-            var centuryBegin = new DateTime(1970,1,1, 0, 0, 0, DateTimeKind.Utc);
-            var exp = (long)new TimeSpan(expires.Ticks - centuryBegin.Ticks).TotalSeconds;
-            var iat = (long)new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds;
+            var exp = expires.ToUnixTimeSeconds();
+            var iat = nowUtc.ToUnixTimeSeconds();
             var payload = new JwtPayload
             {
                 {JwtRegisteredClaimNames.Sub, userId},

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using LatenessManager.Application.Abstractions;
-using LatenessManager.Application.Abstractions.Identity;
 using LatenessManager.Application.Common.Models;
+using LatenessManager.Application.Identity.Abstractions;
 using LatenessManager.Infrastructure.Configurations;
 using LatenessManager.Infrastructure.Identity;
 using LatenessManager.Infrastructure.Persistence;

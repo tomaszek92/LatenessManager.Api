@@ -11,5 +11,10 @@
         {
             public const string InvalidCount = "Penalty.InvalidCount";
         }
+        
+        public static class User
+        {
+            public const string EmailIsNotUnique = "User.EmailIsNotUnique";
+        }
     }
 }
