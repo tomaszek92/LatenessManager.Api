@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using DependencyInjection = LatenessManager.Infrastructure.DependencyInjection;
 
 namespace LatenessManager.Api
 {
@@ -74,7 +75,9 @@ namespace LatenessManager.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
+            app.UseCors(DependencyInjection.AllowSpecificOrigins);
+            
             app.UseAuthentication();
             app.UseAuthorization();
 

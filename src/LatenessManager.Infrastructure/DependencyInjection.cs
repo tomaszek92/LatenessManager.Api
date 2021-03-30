@@ -17,6 +17,8 @@ namespace LatenessManager.Infrastructure
 {
     public static class DependencyInjection
     {
+        public const string AllowSpecificOrigins = "AllowSpecificOrigins";
+
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
@@ -36,9 +38,20 @@ namespace LatenessManager.Infrastructure
             services.AddConfigurationSingleton<FacebookConfiguration>(configuration);
             services.AddHttpClient<IFacebookClient, FacebookClient>();
             services.AddSingleton<IFacebookPublisher, FacebookPublisher>();
+
+            var corsConfiguration = services.AddConfigurationSingleton<CorsConfiguration>(configuration);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    AllowSpecificOrigins,
+                    builder => builder
+                        .WithOrigins(corsConfiguration.AllowedHosts.Split(','))
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
             
-            var jwtTokenConfiguration = configuration.GetSection(nameof(JwtTokenConfiguration)).Get<JwtTokenConfiguration>();
-            services.AddSingleton(jwtTokenConfiguration);
+            var jwtTokenConfiguration = services.AddConfigurationSingleton<JwtTokenConfiguration>(configuration);
 
             services
                 .AddAuthentication(options =>
@@ -65,13 +78,13 @@ namespace LatenessManager.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddConfigurationSingleton<T>(this IServiceCollection services, IConfiguration configuration) 
+        private static T AddConfigurationSingleton<T>(this IServiceCollection services, IConfiguration configuration) 
             where T : class
         {
             var instance = configuration.GetSection(typeof(T).Name).Get<T>();
             services.AddSingleton(instance);
 
-            return services;
+            return instance;
         }
     }
 }
