@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LatenessManager.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class PlayersController : BaseController
     {
         public PlayersController(ISender sender) : base(sender)

@@ -22,7 +22,7 @@ namespace LatenessManager.Infrastructure.Identity
             _jwtHeader = new JwtHeader(signingCredentials);
         }
 
-        public JsonWebToken Create(int userId)
+        public JsonWebToken Create(int userId, string[] roles)
         {
             var nowUtc = DateTime.UtcNow;
             var expires = nowUtc.AddMinutes(_jwtTokenConfiguration.ExpiryMinutes);
@@ -33,7 +33,8 @@ namespace LatenessManager.Infrastructure.Identity
             {
                 {JwtRegisteredClaimNames.Sub, userId},
                 {JwtRegisteredClaimNames.Iat, iat},
-                {JwtRegisteredClaimNames.Exp, exp}
+                {JwtRegisteredClaimNames.Exp, exp},
+                {"roles", roles}
             };
             var jwt = new JwtSecurityToken(_jwtHeader, payload);
             var token = _jwtSecurityTokenHandler.WriteToken(jwt);

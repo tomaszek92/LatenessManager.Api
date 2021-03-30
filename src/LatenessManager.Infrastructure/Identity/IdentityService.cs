@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Abstractions;
@@ -62,11 +63,12 @@ namespace LatenessManager.Infrastructure.Identity
                 throw new Exception("Invalid credentials.");
             }
 
-            var jwt = _jwtHandler.Create(user.Id);
+            var roles = user.Roles.Select(ur => ur.Role).ToArray();
+            var jwt = _jwtHandler.Create(user.Id, roles);
             var refreshToken = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString());
             jwt.RefreshToken = refreshToken;
             
-            await AddRefreshTokenToDatabaseAsync(user.Id, refreshToken, cancellationToken);
+            await AddUserRefreshTokenToDatabaseAsync(user.Id, refreshToken, cancellationToken);
  
             return jwt;
         }
@@ -81,7 +83,9 @@ namespace LatenessManager.Infrastructure.Identity
                 throw new Exception("Refresh token was revoked");
             }
 
-            var jwt = _jwtHandler.Create(refreshToken.UserId);
+            var user = await GetUserAsync(refreshToken.UserId, cancellationToken);
+            var roles = user.Roles.Select(ur => ur.Role).ToArray();
+            var jwt = _jwtHandler.Create(user.Id, roles);
             jwt.RefreshToken = refreshToken.Token;
 
             return jwt;
@@ -102,18 +106,30 @@ namespace LatenessManager.Infrastructure.Identity
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
 
+        private async Task<User> GetUserAsync(int id, CancellationToken cancellationToken)
+        {
+            
+            return await _applicationDbContext
+                .Users
+                .AsNoTracking()
+                .Include(user => user.Roles)
+                .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
+        }
+        
         private async Task<User> GetUserAsync(string email, CancellationToken cancellationToken)
         {
             var emailLower = email.ToLower();
             
             return await _applicationDbContext
                 .Users
+                .AsNoTracking()
+                .Include(user => user.Roles)
                 .FirstOrDefaultAsync(user => user.Email == emailLower, cancellationToken);
         }
 
-        private async Task<RefreshToken> GetRefreshTokenAsync(string token, CancellationToken cancellationToken) =>
+        private async Task<UserRefreshToken> GetRefreshTokenAsync(string token, CancellationToken cancellationToken) =>
             await _applicationDbContext
-                .RefreshTokens
+                .UserRefreshTokens
                 .FirstOrDefaultAsync(refreshToken => refreshToken.Token == token, cancellationToken);
 
         private async Task AddUserToDatabaseAsync(
@@ -124,17 +140,17 @@ namespace LatenessManager.Infrastructure.Identity
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
         
-        private async Task AddRefreshTokenToDatabaseAsync(
+        private async Task AddUserRefreshTokenToDatabaseAsync(
             int userId, 
             string token,
             CancellationToken cancellationToken)
         {
-            var refreshToken = new RefreshToken
+            var refreshToken = new UserRefreshToken
             {
                 UserId = userId,
                 Token = token
             };
-            await _applicationDbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+            await _applicationDbContext.UserRefreshTokens.AddAsync(refreshToken, cancellationToken);
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
         }
     }

@@ -4,6 +4,6 @@ namespace LatenessManager.Application.Abstractions.Identity
 {
     public interface IJwtHandler
     {
-        JsonWebToken Create(int userId);
+        JsonWebToken Create(int userId, string[] roles);
     }
 }
