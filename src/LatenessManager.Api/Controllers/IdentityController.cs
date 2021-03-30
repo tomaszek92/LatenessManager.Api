@@ -1,9 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using LatenessManager.Application.Abstractions;
-using LatenessManager.Application.Identity.Abstractions;
 using LatenessManager.Application.Identity.Commands.Login;
+using LatenessManager.Application.Identity.Commands.RefreshAccessToken;
 using LatenessManager.Application.Identity.Commands.Register;
+using LatenessManager.Application.Identity.Commands.RevokeRefreshToken;
 using LatenessManager.Application.Identity.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,14 +15,10 @@ namespace LatenessManager.Api.Controllers
     [Authorize]
     public class IdentityController : BaseController
     {
-        private readonly IIdentityService _identityService;
         private readonly ICurrentUserProvider _currentUserProvider;
 
-        public IdentityController(
-            ISender sender,
-            IIdentityService identityService, ICurrentUserProvider currentUserProvider) : base(sender)
+        public IdentityController(ISender sender, ICurrentUserProvider currentUserProvider) : base(sender)
         {
-            _identityService = identityService;
             _currentUserProvider = currentUserProvider;
         }
 
@@ -45,27 +42,27 @@ namespace LatenessManager.Api.Controllers
             [FromBody] LoginCommand command,
             CancellationToken cancellationToken)
         {
-            var jsonWebToken = await Sender.Send(command, cancellationToken);
+            var jsonWebTokenDto = await Sender.Send(command, cancellationToken);
 
-            return jsonWebToken;
+            return jsonWebTokenDto;
         }
 
-        [HttpPost("tokens/{token}/refresh")]
+        [HttpPost("token/refresh")]
         public async Task<ActionResult<JsonWebTokenDto>> RefreshAccessToken(
-            string token,
+            [FromBody] RefreshAccessTokenCommand command,
             CancellationToken cancellationToken)
         {
-            var jsonWebToken = await _identityService.RefreshAccessTokenAsync(token, cancellationToken);
-
-            return jsonWebToken;
+            var jsonWebTokenDto = await Sender.Send(command, cancellationToken);
+            
+            return jsonWebTokenDto;
         }
  
-        [HttpPost("tokens/{token}/revoke")]
+        [HttpPost("token/revoke")]
         public async Task<ActionResult> RevokeRefreshToken(
-            string token,
+            [FromBody] RevokeRefreshTokenCommand command,
             CancellationToken cancellationToken)
         {
-            await _identityService.RevokeRefreshTokenAsync(token, cancellationToken);
+            await Sender.Send(command, cancellationToken);
  
             return new NoContentResult();
         }
