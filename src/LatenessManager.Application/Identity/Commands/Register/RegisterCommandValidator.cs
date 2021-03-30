@@ -25,13 +25,9 @@ namespace LatenessManager.Application.Identity.Commands.Register
                 .NotEmpty();
         }
 
-        private async Task<bool> EmailIsUniqueAsync(string email, CancellationToken cancellationToken)
-        {
-            var emailLower = email.ToLower();
-
-            return !await _applicationDbContext
+        private async Task<bool> EmailIsUniqueAsync(string email, CancellationToken cancellationToken) =>
+            !await _applicationDbContext
                 .Users
-                .AnyAsync(user => user.Email == emailLower, cancellationToken);
-        }
+                .AnyAsync(user => user.Email == email.ToLower(), cancellationToken);
     }
 }

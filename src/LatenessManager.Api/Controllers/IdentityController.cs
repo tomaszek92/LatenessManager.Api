@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LatenessManager.Application.Common.Models;
 using LatenessManager.Application.Identity.Abstractions;
 using LatenessManager.Application.Identity.Commands.Login;
 using LatenessManager.Application.Identity.Commands.Register;
+using LatenessManager.Application.Identity.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,11 +26,11 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public ActionResult<string> Get() => 
             _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<ActionResult> Register(
             [FromBody] RegisterCommand command,
             CancellationToken cancellationToken)
@@ -41,7 +41,8 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<JsonWebToken>> Login(
+        [AllowAnonymous]
+        public async Task<ActionResult<JsonWebTokenDto>> Login(
             [FromBody] LoginCommand command,
             CancellationToken cancellationToken)
         {
@@ -51,8 +52,7 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpPost("tokens/{token}/refresh")]
-        [Authorize]
-        public async Task<ActionResult<JsonWebToken>> RefreshAccessToken(
+        public async Task<ActionResult<JsonWebTokenDto>> RefreshAccessToken(
             string token,
             CancellationToken cancellationToken)
         {
@@ -62,7 +62,6 @@ namespace LatenessManager.Api.Controllers
         }
  
         [HttpPost("tokens/{token}/revoke")]
-        [Authorize]
         public async Task<ActionResult> RevokeRefreshToken(
             string token,
             CancellationToken cancellationToken)

@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using LatenessManager.Application.Common.Models;
 using LatenessManager.Application.Identity.Abstractions;
+using LatenessManager.Application.Identity.Dtos;
 using LatenessManager.Infrastructure.Configurations;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,7 +23,7 @@ namespace LatenessManager.Infrastructure.Identity
             _jwtHeader = new JwtHeader(signingCredentials);
         }
 
-        public JsonWebToken Create(int userId, string[] roles)
+        public JsonWebTokenDto Create(int userId, string[] roles)
         {
             var nowUtc = DateTimeOffset.UtcNow;
             var expires = nowUtc.AddMinutes(_jwtTokenConfiguration.ExpiryMinutes);
@@ -38,7 +39,7 @@ namespace LatenessManager.Infrastructure.Identity
             var jwt = new JwtSecurityToken(_jwtHeader, payload);
             var token = _jwtSecurityTokenHandler.WriteToken(jwt);
 
-            return new JsonWebToken
+            return new JsonWebTokenDto
             {
                 AccessToken = token,
                 Expires = exp

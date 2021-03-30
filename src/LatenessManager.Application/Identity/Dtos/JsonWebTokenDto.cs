@@ -1,6 +1,6 @@
-﻿namespace LatenessManager.Application.Common.Models
+﻿namespace LatenessManager.Application.Identity.Dtos
 {
-    public class JsonWebToken
+    public class JsonWebTokenDto
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }

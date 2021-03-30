@@ -1,12 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LatenessManager.Application.Common.Models;
 using LatenessManager.Application.Identity.Abstractions;
+using LatenessManager.Application.Identity.Dtos;
 using MediatR;
 
 namespace LatenessManager.Application.Identity.Commands.Login
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, JsonWebToken>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, JsonWebTokenDto>
     {
         private readonly IIdentityService _identityService;
 
@@ -15,7 +15,7 @@ namespace LatenessManager.Application.Identity.Commands.Login
             _identityService = identityService;
         }
 
-        public async Task<JsonWebToken> Handle(LoginCommand request, CancellationToken cancellationToken) => 
+        public async Task<JsonWebTokenDto> Handle(LoginCommand request, CancellationToken cancellationToken) => 
             await _identityService.LoginAsync(request.Email, request.Password, cancellationToken);
     }
 }
