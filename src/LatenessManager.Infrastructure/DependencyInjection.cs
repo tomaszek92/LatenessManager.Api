@@ -32,6 +32,10 @@ namespace LatenessManager.Infrastructure
             services.AddSingleton<IJwtHandler, JwtHandler>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<ICurrentUserProvider, CurrentUserProvider>();
+
+            services.AddConfigurationSingleton<FacebookConfiguration>(configuration);
+            services.AddHttpClient<IFacebookClient, FacebookClient>();
+            services.AddSingleton<IFacebookPublisher, FacebookPublisher>();
             
             var jwtTokenConfiguration = configuration.GetSection(nameof(JwtTokenConfiguration)).Get<JwtTokenConfiguration>();
             services.AddSingleton(jwtTokenConfiguration);
@@ -57,6 +61,15 @@ namespace LatenessManager.Infrastructure
                         ValidateLifetime = true
                     };
                 });
+
+            return services;
+        }
+
+        private static IServiceCollection AddConfigurationSingleton<T>(this IServiceCollection services, IConfiguration configuration) 
+            where T : class
+        {
+            var instance = configuration.GetSection(typeof(T).Name).Get<T>();
+            services.AddSingleton(instance);
 
             return services;
         }

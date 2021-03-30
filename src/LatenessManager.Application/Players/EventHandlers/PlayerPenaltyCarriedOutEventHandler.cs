@@ -1,26 +1,37 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using LatenessManager.Application.Abstractions;
 using LatenessManager.Application.Common.Models;
+using LatenessManager.Domain.Entities.PlayerAggregate;
 using LatenessManager.Domain.Events;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace LatenessManager.Application.Players.EventHandlers
 {
     public class PlayerPenaltyCarriedOutEventHandler : INotificationHandler<DomainEventNotification<PlayerPenaltyCarriedOutEvent>>
     {
-        private readonly ILogger<PlayerPenaltyCarriedOutEventHandler> _logger;
+        private readonly IFacebookPublisher _facebookPublisher;
+        private readonly IApplicationDbContext _applicationDbContext;
 
-        public PlayerPenaltyCarriedOutEventHandler(ILogger<PlayerPenaltyCarriedOutEventHandler> logger)
+        public PlayerPenaltyCarriedOutEventHandler(IFacebookPublisher facebookPublisher, IApplicationDbContext applicationDbContext)
         {
-            _logger = logger;
+            _facebookPublisher = facebookPublisher;
+            _applicationDbContext = applicationDbContext;
         }
 
-        public Task Handle(DomainEventNotification<PlayerPenaltyCarriedOutEvent> notification, CancellationToken cancellationToken)
+        public async Task Handle(DomainEventNotification<PlayerPenaltyCarriedOutEvent> notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Handling {GetType().Name}, PlayerId: {notification.DomainEvent.PlayerId}");
-            
-            return Task.CompletedTask;
+            var player = await GetPlayerAsync(notification.DomainEvent.PlayerId, cancellationToken);
+            var message = $"{player.Name.FirstName} {player.Name.LastName} -{Penalty.Unit}";
+
+            await _facebookPublisher.PublishCommentAsync(message, cancellationToken);
         }
+        
+        private async Task<Player> GetPlayerAsync(int id, CancellationToken cancellationToken) =>
+            await _applicationDbContext
+                .Players
+                .AsNoTracking()
+                .FirstAsync(player => player.Id == id, cancellationToken);
     }
 }
