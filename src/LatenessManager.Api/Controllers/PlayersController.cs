@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LatenessManager.Api.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PlayersController : BaseController
     {
         public PlayersController(ISender sender) : base(sender)
@@ -42,7 +43,6 @@ namespace LatenessManager.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<PlayerDetailsDto>> CreatePlayer(
             [FromBody] CreatePlayerCommand command,
             CancellationToken cancellationToken)
@@ -56,7 +56,6 @@ namespace LatenessManager.Api.Controllers
         }
         
         [HttpPost("{id}/penalty")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddPenalty(
             [FromRoute] int id,
             [FromBody] AddPenaltyCommand command,
@@ -73,7 +72,6 @@ namespace LatenessManager.Api.Controllers
         }
         
         [HttpDelete("{id}/penalty")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CarryOutPenalty(
             [FromRoute] int id,
             [FromBody] CarryOutPenaltyCommand command,

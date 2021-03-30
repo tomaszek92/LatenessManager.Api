@@ -1,33 +1,32 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using LatenessManager.Application.Abstractions;
 using LatenessManager.Application.Identity.Abstractions;
 using LatenessManager.Application.Identity.Commands.Login;
 using LatenessManager.Application.Identity.Commands.Register;
 using LatenessManager.Application.Identity.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LatenessManager.Api.Controllers
 {
+    [Authorize]
     public class IdentityController : BaseController
     {
         private readonly IIdentityService _identityService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUserProvider _currentUserProvider;
 
         public IdentityController(
             ISender sender,
-            IIdentityService identityService, 
-            IHttpContextAccessor httpContextAccessor) : base(sender)
+            IIdentityService identityService, ICurrentUserProvider currentUserProvider) : base(sender)
         {
             _identityService = identityService;
-            _httpContextAccessor = httpContextAccessor;
+            _currentUserProvider = currentUserProvider;
         }
 
         [HttpGet]
-        public ActionResult<string> Get() => 
-            _httpContextAccessor.HttpContext?.User.Identity?.Name;
+        public ActionResult<int> Get() => _currentUserProvider.Id;
 
         [HttpPost("register")]
         [AllowAnonymous]

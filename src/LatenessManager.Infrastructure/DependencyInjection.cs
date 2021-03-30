@@ -31,6 +31,7 @@ namespace LatenessManager.Infrastructure
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<IJwtHandler, JwtHandler>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddSingleton<ICurrentUserProvider, CurrentUserProvider>();
             
             var jwtTokenConfiguration = configuration.GetSection(nameof(JwtTokenConfiguration)).Get<JwtTokenConfiguration>();
             services.AddSingleton(jwtTokenConfiguration);
